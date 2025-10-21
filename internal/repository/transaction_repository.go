@@ -21,14 +21,16 @@ func (r *TransactionRepository) Create(t *model.Transaction) error {
 
 func (r *TransactionRepository) FindAll() ([]model.Transaction, error) {
 	var txs []model.Transaction
-	err := r.db.Preload("Seats").Find(&txs).Error
+	err := r.db.Find(&txs).Error
 	return txs, err
 }
 
 func (r *TransactionRepository) FindByID(id string) (*model.Transaction, error) {
 	var t model.Transaction
-	err := r.db.Preload("Seats").First(&t, id).Error
-	return &t, err
+	if err := r.db.First(&t, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &t, nil
 }
 
 func (r *TransactionRepository) UpdateStatus(id string, status string) error {
