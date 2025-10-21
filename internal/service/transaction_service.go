@@ -3,6 +3,7 @@ package service
 import (
 	"cinema-app/internal/model"
 	"cinema-app/internal/repository"
+	"cinema-app/internal/utils"
 	"fmt"
 	"time"
 
@@ -31,6 +32,7 @@ func (s *TransactionService) CreateTransaction(userID, showtimeID string, seats 
 	total := float64(showtime.Price)
 
 	t := model.Transaction{
+		ID:            utils.GenerateUUID(),
 		UserID:        userID,
 		ShowtimeID:    showtimeID,
 		SeatID:        seats,
@@ -38,17 +40,11 @@ func (s *TransactionService) CreateTransaction(userID, showtimeID string, seats 
 		TotalPrice:    total,
 		Status:        "pending",
 		ExpiredAt:     time.Now().Add(10 * time.Minute),
+		BookedAt:      time.Now(),
 	}
 
 	if err := s.repo.Create(&t); err != nil {
 		return nil, err
-	}
-
-	SeatTrx := []model.SeatTransaction{}
-
-	for _, seat := range SeatTrx {
-		seat.TransactionID = t.ID
-		_ = s.repo.AddSeat(&seat)
 	}
 
 	return &t, nil

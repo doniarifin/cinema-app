@@ -109,5 +109,5 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 
 	//trx
 	auth.POST("/trx", trxController.CreateTransaction)
-	auth.PUT("/trx/:id/pay", trxController.MarkAsPaid)
+	auth.POST("/trx/:id/pay", trxController.MarkAsPaid)
 }
