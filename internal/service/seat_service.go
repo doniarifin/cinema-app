@@ -46,8 +46,10 @@ func (s *seatService) UpdateSeat(id string, updated *model.Seat) error {
 		return errors.New("seat not found")
 	}
 
+	c.BranchID = updated.BranchID
 	c.ShowtimeID = updated.ShowtimeID
 	c.SeatNumber = updated.SeatNumber
+	c.Status = updated.Status
 	c.IsBooked = updated.IsBooked
 	return s.repo.Update(c)
 }

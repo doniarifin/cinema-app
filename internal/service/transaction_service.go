@@ -73,3 +73,16 @@ func (s *TransactionService) MarkAsPaid(id string) error {
 
 	return s.repo.UpdateStatus(id, "paid")
 }
+
+func (s *TransactionService) CancelOrder(id string) error {
+	// t, err := s.repo.FindByID(id)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// if t.Status == "paid" {
+	// 	return fmt.Errorf("transaction is paid, current status: %s", t.Status)
+	// }
+
+	return s.repo.UpdateStatus(id, "canceled")
+}

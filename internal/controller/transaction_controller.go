@@ -9,10 +9,14 @@ import (
 
 type TransactionController struct {
 	service *service.TransactionService
+	seatSrv service.SeatService
 }
 
-func NewTransactionController(s *service.TransactionService) *TransactionController {
-	return &TransactionController{s}
+func NewTransactionController(s *service.TransactionService, seat service.SeatService) *TransactionController {
+	return &TransactionController{
+		service: s,
+		seatSrv: seat,
+	}
 }
 
 type CreateTransactionRequest struct {
@@ -48,4 +52,66 @@ func (c *TransactionController) MarkAsPaid(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Transaction marked as paid"})
+
+	//update seat
+	var req CreateTransactionRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	seat, err := c.seatSrv.GetByID(req.SeatID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "seat not found"})
+		return
+	}
+
+	seat.IsBooked = true
+	seat.Status = "booked"
+
+	if err := c.seatSrv.UpdateSeat(req.SeatID, seat); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Seat updated"})
+
+}
+
+func (c *TransactionController) CancelOrder(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+
+	err := c.service.CancelOrder(idParam)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Transaction marked as paid"})
+
+	//update seat
+	var req CreateTransactionRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	seat, err := c.seatSrv.GetByID(req.SeatID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "seat not found"})
+		return
+	}
+
+	seat.IsBooked = false
+	seat.Status = "available"
+
+	if err := c.seatSrv.UpdateSeat(req.SeatID, seat); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Seat updated"})
+
 }

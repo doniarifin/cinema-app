@@ -62,7 +62,7 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 	//transaction
 	trxRepo := repository.NewTransactionRepository(db)
 	trxSrv := service.NewTransactionService(trxRepo, db)
-	trxController := controller.NewTransactionController(trxSrv)
+	trxController := controller.NewTransactionController(trxSrv, seatSrv)
 
 	// Public Routes
 	r.POST("/register", h.Register)
@@ -110,4 +110,5 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 	//trx
 	auth.POST("/trx", trxController.CreateTransaction)
 	auth.POST("/trx/:id/pay", trxController.MarkAsPaid)
+	auth.POST("/trx/:id/cancel", trxController.CancelOrder)
 }
