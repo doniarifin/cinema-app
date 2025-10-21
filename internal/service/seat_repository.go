@@ -10,7 +10,7 @@ import (
 
 type SeatService interface {
 	GetAll() ([]model.Seat, error)
-	GetByID(id string) (model.Seat, error)
+	GetByID(id string) (*model.Seat, error)
 	CreateSeat(c *model.Seat) error
 	UpdateSeat(id string, c *model.Seat) error
 	DeleteSeat(id string) error
@@ -28,7 +28,7 @@ func (s *seatService) GetAll() ([]model.Seat, error) {
 	return s.repo.GetAll()
 }
 
-func (s *seatService) GetByID(id string) (model.Seat, error) {
+func (s *seatService) GetByID(id string) (*model.Seat, error) {
 	return s.repo.GetByID(id)
 }
 
@@ -49,7 +49,7 @@ func (s *seatService) UpdateSeat(id string, updated *model.Seat) error {
 	c.ShowtimeID = updated.ShowtimeID
 	c.SeatNumber = updated.SeatNumber
 	c.IsBooked = updated.IsBooked
-	return s.repo.Update(&c)
+	return s.repo.Update(c)
 }
 
 func (s *seatService) DeleteSeat(id string) error {

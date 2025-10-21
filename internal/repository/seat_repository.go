@@ -8,7 +8,7 @@ import (
 
 type SeatRepository interface {
 	GetAll() ([]model.Seat, error)
-	GetByID(id string) (model.Seat, error)
+	GetByID(id string) (*model.Seat, error)
 	Create(c *model.Seat) error
 	Update(c *model.Seat) error
 	Delete(id string) error
@@ -28,10 +28,12 @@ func (r *seatRepository) GetAll() ([]model.Seat, error) {
 	return seats, err
 }
 
-func (r *seatRepository) GetByID(id string) (model.Seat, error) {
+func (r *seatRepository) GetByID(id string) (*model.Seat, error) {
 	var c model.Seat
-	err := r.db.First(&c, id).Error
-	return c, err
+	if err := r.db.First(&c, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &c, nil
 }
 
 func (r *seatRepository) Create(c *model.Seat) error {

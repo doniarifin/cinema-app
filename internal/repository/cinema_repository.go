@@ -8,7 +8,7 @@ import (
 
 type CinemaRepository interface {
 	GetAll() ([]cinema.CinemaBranch, error)
-	GetByID(id string) (cinema.CinemaBranch, error)
+	GetByID(id string) (*cinema.CinemaBranch, error)
 	Create(c *cinema.CinemaBranch) error
 	Update(c *cinema.CinemaBranch) error
 	Delete(id string) error
@@ -28,10 +28,12 @@ func (r *cinemaRepository) GetAll() ([]cinema.CinemaBranch, error) {
 	return cinemas, err
 }
 
-func (r *cinemaRepository) GetByID(id string) (cinema.CinemaBranch, error) {
+func (r *cinemaRepository) GetByID(id string) (*cinema.CinemaBranch, error) {
 	var c cinema.CinemaBranch
-	err := r.db.First(&c, id).Error
-	return c, err
+	if err := r.db.First(&c, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &c, nil
 }
 
 func (r *cinemaRepository) Create(c *cinema.CinemaBranch) error {

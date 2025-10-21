@@ -10,7 +10,7 @@ import (
 
 type MovieService interface {
 	GetAll() ([]model.Movie, error)
-	GetByID(id string) (model.Movie, error)
+	GetByID(id string) (*model.Movie, error)
 	CreateMovie(c *model.Movie) error
 	UpdateMovie(id string, c *model.Movie) error
 	DeleteMovie(id string) error
@@ -28,7 +28,7 @@ func (s *movieService) GetAll() ([]model.Movie, error) {
 	return s.repo.GetAll()
 }
 
-func (s *movieService) GetByID(id string) (model.Movie, error) {
+func (s *movieService) GetByID(id string) (*model.Movie, error) {
 	return s.repo.GetByID(id)
 }
 
@@ -50,7 +50,7 @@ func (s *movieService) UpdateMovie(id string, updated *model.Movie) error {
 	c.Genre = updated.Genre
 	c.Duration = updated.Duration
 	c.Synopsis = updated.Synopsis
-	return s.repo.Update(&c)
+	return s.repo.Update(c)
 }
 
 func (s *movieService) DeleteMovie(id string) error {

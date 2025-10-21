@@ -8,7 +8,7 @@ import (
 
 type MovieRepository interface {
 	GetAll() ([]model.Movie, error)
-	GetByID(id string) (model.Movie, error)
+	GetByID(id string) (*model.Movie, error)
 	Create(c *model.Movie) error
 	Update(c *model.Movie) error
 	Delete(id string) error
@@ -28,10 +28,12 @@ func (r *movieRepository) GetAll() ([]model.Movie, error) {
 	return movies, err
 }
 
-func (r *movieRepository) GetByID(id string) (model.Movie, error) {
+func (r *movieRepository) GetByID(id string) (*model.Movie, error) {
 	var c model.Movie
-	err := r.db.First(&c, id).Error
-	return c, err
+	if err := r.db.First(&c, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &c, nil
 }
 
 func (r *movieRepository) Create(c *model.Movie) error {

@@ -10,7 +10,7 @@ import (
 
 type CinemaService interface {
 	GetAll() ([]cinema.CinemaBranch, error)
-	GetByID(id string) (cinema.CinemaBranch, error)
+	GetByID(id string) (*cinema.CinemaBranch, error)
 	CreateCinema(c *cinema.CinemaBranch) error
 	UpdateCinema(id string, c *cinema.CinemaBranch) error
 	DeleteCinema(id string) error
@@ -28,7 +28,7 @@ func (s *cinemaService) GetAll() ([]cinema.CinemaBranch, error) {
 	return s.repo.GetAll()
 }
 
-func (s *cinemaService) GetByID(id string) (cinema.CinemaBranch, error) {
+func (s *cinemaService) GetByID(id string) (*cinema.CinemaBranch, error) {
 	return s.repo.GetByID(id)
 }
 
@@ -48,7 +48,7 @@ func (s *cinemaService) UpdateCinema(id string, updated *cinema.CinemaBranch) er
 
 	c.BranchName = updated.BranchName
 	c.City = updated.City
-	return s.repo.Update(&c)
+	return s.repo.Update(c)
 }
 
 func (s *cinemaService) DeleteCinema(id string) error {

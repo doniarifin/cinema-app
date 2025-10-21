@@ -8,7 +8,7 @@ import (
 
 type ShowtimeRepository interface {
 	GetAll() ([]model.Showtime, error)
-	GetByID(id string) (model.Showtime, error)
+	GetByID(id string) (*model.Showtime, error)
 	Create(c *model.Showtime) error
 	Update(c *model.Showtime) error
 	Delete(id string) error
@@ -28,10 +28,12 @@ func (r *showtimeRepository) GetAll() ([]model.Showtime, error) {
 	return showtimes, err
 }
 
-func (r *showtimeRepository) GetByID(id string) (model.Showtime, error) {
+func (r *showtimeRepository) GetByID(id string) (*model.Showtime, error) {
 	var c model.Showtime
-	err := r.db.First(&c, id).Error
-	return c, err
+	if err := r.db.First(&c, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &c, nil
 }
 
 func (r *showtimeRepository) Create(c *model.Showtime) error {

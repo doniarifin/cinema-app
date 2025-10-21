@@ -10,7 +10,7 @@ import (
 
 type ShowtimeService interface {
 	GetAll() ([]model.Showtime, error)
-	GetByID(id string) (model.Showtime, error)
+	GetByID(id string) (*model.Showtime, error)
 	CreateShowtime(c *model.Showtime) error
 	UpdateShowtime(id string, c *model.Showtime) error
 	DeleteShowtime(id string) error
@@ -28,7 +28,7 @@ func (s *showtimeService) GetAll() ([]model.Showtime, error) {
 	return s.repo.GetAll()
 }
 
-func (s *showtimeService) GetByID(id string) (model.Showtime, error) {
+func (s *showtimeService) GetByID(id string) (*model.Showtime, error) {
 	return s.repo.GetByID(id)
 }
 
@@ -50,7 +50,7 @@ func (s *showtimeService) UpdateShowtime(id string, updated *model.Showtime) err
 	c.MovieID = updated.MovieID
 	c.Price = updated.Price
 	c.DateTime = updated.DateTime
-	return s.repo.Update(&c)
+	return s.repo.Update(c)
 }
 
 func (s *showtimeService) DeleteShowtime(id string) error {
