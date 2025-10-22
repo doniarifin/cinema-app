@@ -54,15 +54,19 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 	showtimeService := service.NewShowtimeService(showtimeRepo)
 	showtimeController := controller.NewShowtimeController(showtimeService)
 
+	//seat trx
+	seatTrxRepo := repository.NewSeatTransactionRepo(db)
+	seatTrxSrv := service.NewSeatTrxSrv(seatTrxRepo)
+
 	//seat
 	seatRepo := repository.NewSeatRepository(db)
-	seatSrv := service.NewSeatService(seatRepo)
+	seatSrv := service.NewSeatService(seatRepo, seatTrxRepo)
 	seatController := controller.NewSeatController(seatSrv)
 
 	//transaction
 	trxRepo := repository.NewTransactionRepository(db)
 	trxSrv := service.NewTransactionService(trxRepo, db)
-	trxController := controller.NewTransactionController(trxSrv, seatSrv)
+	trxController := controller.NewTransactionController(trxSrv, seatSrv, seatTrxSrv)
 
 	// Public Routes
 	r.POST("/register", h.Register)

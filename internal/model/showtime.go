@@ -3,9 +3,11 @@ package model
 import "time"
 
 type Showtime struct {
-	ID       string    `json:"id" gorm:"primaryKey"`
-	BranchID string    `json:"branch_id"`
-	MovieID  string    `json:"movie_id"`
-	DateTime time.Time `json:"date_time"`
-	Price    int       `json:"price"`
+	ID        string    `json:"id" gorm:"primaryKey"`
+	BranchID  string    `json:"branch_id"`
+	MovieID   string    `json:"movie_id"`
+	DateTime  time.Time `json:"date_time"`
+	StartShow time.Time `json:"start_show"`
+	EndShow   time.Time `json:"end_time"`
+	Price     int       `json:"price"`
 }

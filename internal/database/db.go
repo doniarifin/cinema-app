@@ -43,7 +43,7 @@ func RunMigration(db *gorm.DB) {
 		&model.Movie{},
 		&model.Showtime{},
 		&model.Seat{},
-		&model.SeatTransaction{},
 		&model.Transaction{},
+		&model.SeatTransaction{},
 	)
 }

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"cinema-app/internal/model"
+	"cinema-app/internal/utils"
 	"time"
 
 	"gorm.io/gorm"
@@ -38,6 +39,9 @@ func (r *TransactionRepository) UpdateStatus(id string, status string) error {
 }
 
 func (r *TransactionRepository) AddSeat(seat *model.SeatTransaction) error {
+	if seat.ID == "" {
+		seat.ID = utils.GenerateUUID()
+	}
 	return r.db.Create(seat).Error
 }
 
