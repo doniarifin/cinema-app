@@ -4,6 +4,7 @@ import (
 	"cinema-app/config"
 	"cinema-app/internal/database"
 	"cinema-app/internal/routes"
+	"cinema-app/internal/utils"
 	"log"
 	"os"
 
@@ -16,6 +17,8 @@ import (
 func main() {
 	// Init env
 	config.InitEnv()
+	// init redis
+	utils.InitRedisLock()
 
 	// Connect DB
 	db, err := database.ConnectDB()
