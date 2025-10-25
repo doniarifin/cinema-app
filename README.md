@@ -9,3 +9,27 @@ link postman **(regularly update)**: https://backend-tes.postman.co/workspace/ba
 ## Diagram
 
 ![Diagaram](Diagram.png)
+
+## Quick Start
+
+### 1. Rename/copy .env_copy to .env
+
+```
+cp .env_copy .env
+```
+
+setup your env
+
+### 2. Install depedencies and run the app
+
+- install depedencies
+
+```
+go mod tidy
+```
+
+- run the app, entry point in `cmd` folder/directory.
+
+```
+go run main.go
+```
